@@ -4,62 +4,71 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private float moveSpeed;
     [SerializeField] private float jumpHeight;
+    [SerializeField] private float jumpBufferTime = 0.1f;
 
-    Rigidbody2D body;
-    bool canJump;
-    bool canDoubleJump;
-    bool isJumping;
-    bool isCrawling;
+    private PlayerStateMachine stateMachine;
+    private Rigidbody2D body;
+    private float jumpBufferCounter;
+
+    public float MoveSpeed => moveSpeed;
+    public float JumpHeight => jumpHeight;
+    public float JumpBufferTime => jumpBufferTime;
+    public Rigidbody2D Body => body;
+    public bool CanJump { get; set; }
+    public bool CanDoubleJump { get; set; }
+    public bool IsJumping { get; set; }
+    public bool IsCrawling { get; set; }
 
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
-        isCrawling = false;
+        stateMachine = new PlayerStateMachine(this);
+        stateMachine.SetState<PlayerIdleState>();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            jumpBufferCounter = jumpBufferTime;
+        }
+        else
+        {
+            jumpBufferCounter -= Time.deltaTime;
+        }
+
+        stateMachine.UpdateState();
+    }
+
+    public void SetState<T>() where T : PlayerBaseState
+    {
+        stateMachine.SetState<T>();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("OnCollision Enter " + collision.transform.tag);
         if (collision.transform.CompareTag("Ground"))
         {
-            canJump = true;
-            isJumping = false;
+            CanJump = true;
+            IsJumping = false;
+
+            if (jumpBufferCounter > 0)
+            {
+                SetState<PlayerJumpState>();
+                jumpBufferCounter = 0;
+            }
+            else if (stateMachine.CurrentState is PlayerJumpState)
+            {
+                SetState<PlayerIdleState>();
+            }
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        Debug.Log("OnCollision Exit " + collision.transform.tag);
-        canJump = false;
-    }
-
-    private void Update()
-    {
-        // Left and Right movement
-        body.linearVelocity = new Vector2(Input.GetAxis("Horizontal") * moveSpeed, body.linearVelocity.y);
-
-        // Jump and Double Jump
-        if (!isCrawling && Input.GetKeyDown(KeyCode.UpArrow))
+        if (collision.transform.CompareTag("Ground"))
         {
-            if (canJump)
-            {
-                isJumping = true;
-                canJump = false;
-                canDoubleJump = true;
-                OnJump();
-            }
-            else if (canDoubleJump)
-            {
-                canDoubleJump = false;
-                OnJump();
-            }
+            CanJump = false;
         }
-
-        // Crawl
-    }
-
-    void OnJump()
-    {
-        body.linearVelocity = new Vector2(body.linearVelocity.x, jumpHeight);
     }
 }

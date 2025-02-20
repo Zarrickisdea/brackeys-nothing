@@ -831,6 +831,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 10
   jumpHeight: 5
+  jumpBufferTime: 0.35
 --- !u!1 &1960850614
 GameObject:
   m_ObjectHideFlags: 0

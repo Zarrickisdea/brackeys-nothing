@@ -1,13 +1,11 @@
-public class PlayerBaseState : BaseState
+public abstract class PlayerBaseState : BaseState
 {
-    protected Player playerController;
+    protected Player player;
 
-    public PlayerBaseState(Player playerController)
+    public PlayerBaseState(Player player)
     {
-        this.playerController = playerController;
+        this.player = player;
     }
 
-    public override void Enter() { }
-
-    public override void Exit() { }
+    public virtual void Update() { }
 }
