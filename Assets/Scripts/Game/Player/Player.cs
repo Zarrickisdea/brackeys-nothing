@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, ISubject
 {
     [SerializeField] private float moveSpeed;
     [SerializeField] private float jumpHeight;
@@ -18,6 +19,9 @@ public class Player : MonoBehaviour
     public bool CanDoubleJump { get; set; }
     public bool IsJumping { get; set; }
     public bool IsCrawling { get; set; }
+
+    private List<IObserver> observers = new List<IObserver>();
+    public AudioClip wispCollisionSound;
 
     private void Awake()
     {
@@ -40,11 +44,6 @@ public class Player : MonoBehaviour
         stateMachine.UpdateState();
     }
 
-    public void SetState<T>() where T : PlayerBaseState
-    {
-        stateMachine.SetState<T>();
-    }
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.transform.CompareTag("Ground"))
@@ -62,6 +61,12 @@ public class Player : MonoBehaviour
                 SetState<PlayerIdleState>();
             }
         }
+
+        if (collision.transform.CompareTag("Wisp"))
+        {
+            Debug.Log("Dead");
+            NotifyObservers("VariedEffect", wispCollisionSound);
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -69,6 +74,29 @@ public class Player : MonoBehaviour
         if (collision.transform.CompareTag("Ground"))
         {
             CanJump = false;
+        }
+    }
+
+    public void SetState<T>() where T : PlayerBaseState
+    {
+        stateMachine.SetState<T>();
+    }
+
+    public void AddObserver(IObserver observer)
+    {
+        observers.Add(observer);
+    }
+
+    public void RemoveObserver(IObserver observer)
+    {
+        observers.Remove(observer);
+    }
+
+    public void NotifyObservers(string eventType, object data)
+    {
+        foreach (var observer in observers)
+        {
+            observer.OnNotify(eventType, data);
         }
     }
 }
