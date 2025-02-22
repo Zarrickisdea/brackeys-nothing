@@ -19,24 +19,6 @@ AudioMixerGroupController:
   m_Mute: 0
   m_Solo: 0
   m_BypassEffects: 0
---- !u!244 &-7538589374322148293
-AudioMixerEffectController:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_EffectID: 4c7ab31562359994494d2292f2d4a6ba
-  m_EffectName: Lowpass
-  m_MixLevel: 8ba79afb1f19c064790ed7cdfe8f9e5b
-  m_Parameters:
-  - m_ParameterName: Cutoff freq
-    m_GUID: a3c454f849c35b3428afa8a68444a331
-  - m_ParameterName: Resonance
-    m_GUID: 6667012a67b066245be39630d6f845e8
-  m_SendTarget: {fileID: 0}
-  m_EnableWetMix: 0
-  m_Bypass: 0
 --- !u!244 &-7508805659235425507
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -146,7 +128,11 @@ AudioMixerController:
   m_SuspendThreshold: -80
   m_EnableSuspend: 1
   m_UpdateMode: 0
-  m_ExposedParameters: []
+  m_ExposedParameters:
+  - guid: f6540f8f8743edf4db40d67746fd5a3e
+    name: Ambient1Volume
+  - guid: b7a5eb11226e2584dae8059caf7a0164
+    name: Ambient2Volume
   m_AudioMixerGroupViews:
   - guids:
     - a0a662163688eca478fcd27fbc6cf3e4
@@ -246,7 +232,6 @@ AudioMixerGroupController:
   m_Send: 00000000000000000000000000000000
   m_Effects:
   - {fileID: 7247593062388315989}
-  - {fileID: -7538589374322148293}
   m_UserColorIndex: 0
   m_Mute: 0
   m_Solo: 0
