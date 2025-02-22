@@ -64,7 +64,6 @@ public class Player : MonoBehaviour, ISubject
 
         if (collision.transform.CompareTag("Wisp"))
         {
-            Debug.Log("Dead");
             NotifyObservers("VariedEffect", wispCollisionSound);
         }
     }
