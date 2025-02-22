@@ -33,6 +33,48 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
+--- !u!244 &-7240753097885792740
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: fd954d7e2e14fdf49aad4159b785deae
+  m_EffectName: SFX Reverb
+  m_MixLevel: a865a16fb0862fb42a37e5b49a497dc9
+  m_Parameters:
+  - m_ParameterName: Dry Level
+    m_GUID: 1d8db4e9a0d055145bda92620f643be0
+  - m_ParameterName: Room
+    m_GUID: eb8a5ce1e88e8f449913fb94a27d04dc
+  - m_ParameterName: Room HF
+    m_GUID: fe529286d1d66114bb830c25909fba98
+  - m_ParameterName: Decay Time
+    m_GUID: d49bb596d89b5f54b84549491cfcb091
+  - m_ParameterName: Decay HF Ratio
+    m_GUID: 67785c04f1c9ae44384f7f896af3ca6a
+  - m_ParameterName: Reflections
+    m_GUID: ae59ca62f5cece848b8a854776b52e13
+  - m_ParameterName: Reflect Delay
+    m_GUID: edb5232a559e19246a769b73abfdb011
+  - m_ParameterName: Reverb
+    m_GUID: dfece9fccb0b12b46895a59b01f8009d
+  - m_ParameterName: Reverb Delay
+    m_GUID: 6d0cc61b5c764ab498693fe6663c098f
+  - m_ParameterName: Diffusion
+    m_GUID: d9e649fd6bc223a4c9468199c5563b92
+  - m_ParameterName: Density
+    m_GUID: 379cad9c9b07248498db5d0f584040b5
+  - m_ParameterName: HF Reference
+    m_GUID: b9672b3d444679e4bb99f49ea5c47d6f
+  - m_ParameterName: Room LF
+    m_GUID: 0d21eac04950df54b91e9c335976d86b
+  - m_ParameterName: LF Reference
+    m_GUID: 67b741792728b924083789a683de69be
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!244 &-6379866732711181450
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -90,6 +132,8 @@ AudioMixerGroupController:
   m_Send: 00000000000000000000000000000000
   m_Effects:
   - {fileID: -6379866732711181450}
+  - {fileID: 4705814877166209780}
+  - {fileID: -7240753097885792740}
   m_UserColorIndex: 0
   m_Mute: 0
   m_Solo: 0
@@ -133,6 +177,10 @@ AudioMixerController:
     name: Ambient1Volume
   - guid: b7a5eb11226e2584dae8059caf7a0164
     name: Ambient2Volume
+  - guid: a769da5221dd4cb4f8b712cc6884e40e
+    name: MainBGMLowpass
+  - guid: dfece9fccb0b12b46895a59b01f8009d
+    name: MainBGMReverb
   m_AudioMixerGroupViews:
   - guids:
     - a0a662163688eca478fcd27fbc6cf3e4
@@ -247,6 +295,24 @@ AudioMixerEffectController:
   m_EffectName: Attenuation
   m_MixLevel: 82c64323eb2087b459cbf0d91cdc3a37
   m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
+--- !u!244 &4705814877166209780
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: 1c21fe339d99baa418a40b8a398e5c37
+  m_EffectName: Lowpass
+  m_MixLevel: f14f73718ba1d714190ebc892c4d157f
+  m_Parameters:
+  - m_ParameterName: Cutoff freq
+    m_GUID: e9c485656375696438919954a7bb98b8
+  - m_ParameterName: Resonance
+    m_GUID: a769da5221dd4cb4f8b712cc6884e40e
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
