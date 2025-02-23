@@ -1,71 +1,91 @@
 using UnityEngine;
 using UnityEngine.Audio;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
 
 public class AudioManager : MonoBehaviour, IObserver
 {
     [SerializeField] private AudioMixer audioMixer;
+
+    [Header("Audio Sources")]
     [SerializeField] private AudioSource ambient1Source;
     [SerializeField] private AudioSource ambient2Source;
-    [SerializeField] private AudioSource mainSource;
     [SerializeField] private AudioSource effectSource;
+    [SerializeField] private AudioSource mainSource;
 
+    [Header("Audio Settings")]
     [SerializeField] private List<AudioClip> ambientClips;
     [SerializeField] private float crossFadeDuration = 2f;
 
+    private int currentAmbientIndex = 0;
+    private bool isTransitioning = false;
+
     private void Start()
     {
-        audioMixer.SetFloat("Ambient1Volume", 0f);
-        audioMixer.SetFloat("Ambient2Volume", -80f);
+
+        ambient1Source.clip = GetRandomAmbientClip();
+        ambient1Source.Play();
+
+        StartCoroutine(MonitorAmbientTracks());
     }
 
-    private IEnumerator CrossfadeAmbientTracks(AudioClip nextClip)
+    private AudioClip GetRandomAmbientClip()
     {
-        if (ambient1Source.isPlaying)
+        int newIndex;
+        do
         {
-            ambient2Source.clip = nextClip;
-            ambient2Source.Play();
+            newIndex = Random.Range(0, ambientClips.Count);
+        } while (newIndex == currentAmbientIndex && ambientClips.Count > 1);
 
-            float elapsed = 0f;
-            while (elapsed < crossFadeDuration)
-            {
-                elapsed += Time.deltaTime;
-                float t = elapsed / crossFadeDuration;
+        currentAmbientIndex = newIndex;
+        return ambientClips[currentAmbientIndex];
+    }
 
-                audioMixer.SetFloat("Ambient1Volume", Mathf.Lerp(0f, -80f, t));
-                audioMixer.SetFloat("Ambient2Volume", Mathf.Lerp(-80f, 0f, t));
+    private IEnumerator MonitorAmbientTracks()
+    {
+        bool useFirstSource = true;
 
-                yield return null;
-            }
-
-            ambient1Source.Stop();
-        }
-        else
+        while (true)
         {
-            ambient1Source.clip = nextClip;
-            ambient1Source.Play();
-
-            float elapsed = 0f;
-            while (elapsed < crossFadeDuration)
+            if (!isTransitioning)
             {
-                elapsed += Time.deltaTime;
-                float t = elapsed / crossFadeDuration;
+                AudioSource currentSource = useFirstSource ? ambient1Source : ambient2Source;
+                AudioSource nextSource = useFirstSource ? ambient2Source : ambient1Source;
 
-                audioMixer.SetFloat("Ambient2Volume", Mathf.Lerp(0f, -80f, t));
-                audioMixer.SetFloat("Ambient1Volume", Mathf.Lerp(-80f, 0f, t));
-
-                yield return null;
+                if (currentSource.time >= currentSource.clip.length - crossFadeDuration)
+                {
+                    nextSource.clip = GetRandomAmbientClip();
+                    nextSource.Play();
+                    StartCoroutine(CrossfadeUsingMixer(useFirstSource));
+                    useFirstSource = !useFirstSource;
+                }
             }
-
-            ambient2Source.Stop();
+            yield return new WaitForSeconds(0.1f);
         }
+    }
+
+    private IEnumerator CrossfadeUsingMixer(bool fadeFromFirst)
+    {
+        isTransitioning = true;
+        float elapsed = 0f;
+
+        while (elapsed < crossFadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / crossFadeDuration;
+
+            audioMixer.SetFloat("AmbientBlend", fadeFromFirst ? t : 1 - t);
+
+            yield return null;
+        }
+
+        audioMixer.SetFloat("AmbientBlend", fadeFromFirst ? 1 : 0);
+        isTransitioning = false;
     }
 
     public void UpdateMainBGMIntensity(float intensity)
     {
-        audioMixer.SetFloat("MainBGMLowpass", Mathf.Lerp(22000f, 1000f, intensity));
-        audioMixer.SetFloat("MainBGMReverb", Mathf.Lerp(0f, 1f, intensity));
+        audioMixer.SetFloat("MainBGMIntensity", intensity);
     }
 
     private void PlayEffect(AudioClip clip)

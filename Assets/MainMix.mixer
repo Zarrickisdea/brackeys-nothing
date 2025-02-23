@@ -177,6 +177,8 @@ AudioMixerController:
     name: Ambient1Volume
   - guid: b7a5eb11226e2584dae8059caf7a0164
     name: Ambient2Volume
+  - guid: c8090650d51dc654ba8ad15b5151a981
+    name: AmbientBlend
   - guid: a769da5221dd4cb4f8b712cc6884e40e
     name: MainBGMLowpass
   - guid: dfece9fccb0b12b46895a59b01f8009d
@@ -191,8 +193,19 @@ AudioMixerController:
     - 5dfa46cfad070cd4cbd08da998785f51
     - a7ec81ee61eee8247a3f63e26eee9de2
     - c13e2079bf4a73442a31908bdac8c0d8
-    name: View
-  m_CurrentViewIndex: 0
+    name: Everything
+  - guids:
+    - 315f1b296976f894abfb08e378e62f68
+    - 1258833e27f8f744fb28453128318d72
+    - 369749776c0c48f4dbcdeefa033182ad
+    - 5dfa46cfad070cd4cbd08da998785f51
+    name: Ambience
+  - guids:
+    - 439e0dc789a953a4c86bbc2ea59f4861
+    - a7ec81ee61eee8247a3f63e26eee9de2
+    - c13e2079bf4a73442a31908bdac8c0d8
+    name: SFX
+  m_CurrentViewIndex: 1
   m_TargetSnapshot: {fileID: 24500006}
 --- !u!243 &24300002
 AudioMixerGroupController:
